@@ -1,0 +1,12 @@
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  color: #2e2f42;
+  background-color: #ffffff;
+}
+
+.container {
+  max-width: 1158px;
+  padding: 20px 15px;
+  margin: 0 auto;
+}
