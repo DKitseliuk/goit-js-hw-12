@@ -3,8 +3,16 @@
 @import url('./base.css');
 @import url('./loader.css');
 
+.form-container {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  background-color: #ffffff;
+  padding: 36px 0 16px 0;
+}
+
 .form {
-  padding: 16px 0;
   margin: 0 auto;
   max-width: 372px;
   display: flex;
@@ -48,6 +56,16 @@
   letter-spacing: 0.04em;
   color: #ffffff;
   transition: background-color 250ms ease-in-out;
+}
+
+.form-btn-load.is-active {
+  display: block;
+  margin: 16px auto 0;
+  width: 128px;
+}
+
+.form-btn-load {
+  display: none;
 }
 
 .form-btn:hover,

@@ -7,6 +7,6 @@ body {
 
 .container {
   max-width: 1158px;
-  padding: 20px 15px;
+  padding: 0 15px 20px;
   margin: 0 auto;
 }
