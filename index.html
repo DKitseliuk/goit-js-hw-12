@@ -20,23 +20,26 @@
     <script type="module" crossorigin src="/goit-js-hw-12/index.js"></script>
     <link rel="modulepreload" crossorigin href="/goit-js-hw-12/assets/vendor-BK_rxH-O.js">
     <link rel="stylesheet" crossorigin href="/goit-js-hw-12/assets/vendor-DumFYO8Z.css">
-    <link rel="stylesheet" crossorigin href="/goit-js-hw-12/assets/index-lTOUH7FT.css">
+    <link rel="stylesheet" crossorigin href="/goit-js-hw-12/assets/index-CrZsyb5g.css">
   </head>
   <body>
     <div class="container">
-      <form class="form">
-        <label>
-          <input
-            class="form-input"
-            type="text"
-            name="search-text"
-            placeholder="Search images..."
-          />
-        </label>
-        <button class="form-btn" type="submit">Search</button>
-      </form>
-      <span class="span-loader"></span>
+      <div class="form-container">
+        <form class="form">
+          <label>
+            <input
+              class="form-input"
+              type="text"
+              name="search-text"
+              placeholder="Search images..."
+            />
+          </label>
+          <button class="form-btn" type="submit">Search</button>
+        </form>
+      </div>
       <ul class="gallery"></ul>
+      <button class="form-btn form-btn-load" type="button">Load more</button>
+      <span class="span-loader"></span>
     </div>
   </body>
 </html>
