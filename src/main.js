@@ -5,59 +5,108 @@ import getImagesByQuery from "/js/pixabay-api";
 import * as render from "/js/render-functions";
 
 const form = document.querySelector('.form');
-const loadmorebtn = document.querySelector('.form-btn-load');
+const loadMoreBtn = document.querySelector('.form-btn-load');
 
 let keyWord;
 let page;
+let totaPages;
 
-const galleryUpd = async evt => {
+form.addEventListener('submit', galleryUpd);
+loadMoreBtn.addEventListener('click', galleryLoadMore);
+
+async function galleryUpd(evt) {
     evt.preventDefault();
+
     render.hideLoadMoreButton();
+    render.clearGallery();
 
-    if (evt.target.nodeName === 'FORM') {        
-        render.clearGallery();
-        keyWord = evt.target.elements['search-text'].value.trim();
-        page = 1;
-        form.reset();
-        if (!(keyWord)) return;
+    keyWord = evt.target.elements['search-text'].value.trim();
+    page = 1;
+    form.reset();
+
+    if (!(keyWord)) {
+        iziToast.warning({
+            message: "Sorry, you didn't enter search query. Please try again!",
+            position: "topRight",
+        })
+        return;
     }    
-    
-    render.showLoader();    
-    
-    const data = await getImagesByQuery(keyWord, page++);
-    
-    render.hideLoader();
 
-    if (data.totalHits) {
+    try {
+        render.showLoader();
+        const data = await getImagesByQuery(keyWord, page);
+        render.hideLoader();
+
+        if (!data.totalHits) {
+            iziToast.error({
+                message: 'Sorry, there are no images matching your search query. Please try again!',
+                position: "topRight",
+            });
+            return;
+        };
         
+        totaPages = Math.ceil(data.totalHits / 15);        
+
         render.createGallery(data.hits);
 
-        setTimeout(() => {
-            const galleryItem = document.querySelector(".gallery-item");
-            const rowHeight = galleryItem.getBoundingClientRect().height;          
-
-            window.scrollBy({
-                top: 2 * rowHeight,
-                behavior: "smooth",
-            });
-        }, 500);
-
-        if (Math.ceil(data.totalHits / 15) >= page) {
-            render.showLoadMoreButton();            
-        } else {
+        if (page >= totaPages) {
             iziToast.info({
                 message: "We're sorry, but you've reached the end of search results.",
                 position: "topRight",
             });
+            return;
         }
-        
-    } else {
+
+        render.showLoadMoreButton();       
+
+    } catch (error) {
+        render.hideLoader();
         iziToast.error({
-            message: 'Sorry, there are no images matching your search query. Please try again!',
+            message: 'Sorry, something went wrong. Please try again!',
             position: "topRight",
-        });
+        });        
     };
 }
 
-form.addEventListener('submit', galleryUpd);
-loadmorebtn.addEventListener('click', galleryUpd)
+async function galleryLoadMore(evt) {   
+    evt.preventDefault();    
+    render.hideLoadMoreButton();
+
+    try {
+        render.showLoader();
+        page++;
+        const data = await getImagesByQuery(keyWord, page);
+        render.hideLoader();
+
+        render.createGallery(data.hits);
+
+        setTimeout(() => {
+                const galleryItem = document.querySelector(".gallery-item");
+                const rowHeight = galleryItem.getBoundingClientRect().height;
+
+                window.scrollBy({
+                    top: 2 * rowHeight,
+                    behavior: "smooth",
+                });
+            }, 500);
+
+        if (page >= totaPages) {
+            iziToast.info({
+                message: "We're sorry, but you've reached the end of search results.",
+                position: "topRight",
+            });
+            return;
+        }
+
+        render.showLoadMoreButton();        
+
+    } catch (error) {        
+        page--;
+        render.hideLoader();
+        render.showLoadMoreButton();
+        iziToast.error({
+            message: 'Sorry, something went wrong. Please try again!',
+            position: "topRight",
+        });        
+    };
+}
